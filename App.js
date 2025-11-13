@@ -37,7 +37,7 @@ function App() {
   };
   return (
     <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>🕓 My Clock & Calendar App</h1>
+      <h1>Cadence</h1>
       <Clock />
       <EventForm onAdd={addEvent}/>
       <EventList events={events} onDelete={deleteEvent}/>
