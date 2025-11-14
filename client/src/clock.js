@@ -8,7 +8,11 @@ function Clock() {
     return () => clearInterval(timer);
   }, []);
 
-  return <h2>{time.toLocaleTimeString()}</h2>;
+  return (
+    <div className="clock-time">
+      {time.toLocaleTimeString()}
+    </div>
+  );
 }
 
 export default Clock;

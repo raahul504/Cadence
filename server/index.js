@@ -17,6 +17,7 @@ db.run(`
     date TEXT,
     time TEXT,
     description TEXT
+    color TEXT
   )
 `);
 
@@ -30,10 +31,10 @@ app.get("/events", (req, res) => {
 
 // Add new event
 app.post("/events", (req, res) => {
-  const { title, date, time, description } = req.body;
+  const { title, date, time, description, color } = req.body;
   db.run(
-    "INSERT INTO events (title, date, time, description) VALUES (?, ?, ?, ?)",
-    [title, date, time, description],
+    "INSERT INTO events (title, date, time, description, color) VALUES (?, ?, ?, ?, ?)",
+    [title, date, time, description, color],
     function (err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ id: this.lastID });
@@ -52,11 +53,11 @@ app.delete("/events/:id", (req, res) => {
 // Update an existing event
 app.put("/events/:id", (req, res) => {
   const id = req.params.id;
-  const { title, date, time, description } = req.body;
+  const { title, date, time, description, color } = req.body;
 
   db.run(
-    "UPDATE events SET title = ?, date = ?, time = ?, description = ? WHERE id = ?",
-    [title, date, time, description, id],
+    "UPDATE events SET title = ?, date = ?, time = ?, description = ?, color = ? WHERE id = ?",
+    [title, date, time, description, color, id],
     function (err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ updated: this.changes });
