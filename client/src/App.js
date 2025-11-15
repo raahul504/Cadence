@@ -68,10 +68,26 @@ function App() {
   };
 
   // Delete event
-  const deleteEvent = (id) => {
-    fetch(`${API_URL}/events/${id}`, { method: "DELETE" })
-      .then(() => setEvents(events.filter(e => e.id !== id)));
-      setEventToDelete(null); // ADD THIS - Close confirmation modal
+  const deleteEvent = async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/events/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        // Handle non-successful responses (e.g., server errors)
+        console.error("Failed to delete event:", response.status, response.statusText);
+        // Optionally, you can show an error message to the user
+        return;
+      }
+
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      // Optionally, show an error message to the user
+    } finally {
+      setEventToDelete(null); // Close confirmation modal
+    }
   };
 
   const formatSelectedDate = (date) => {
