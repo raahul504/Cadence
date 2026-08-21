@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { conversationHelpers } from './lib/supabase';
 import { chatWithGemini } from './lib/gemini';
 import ChatMessage from './ChatMessage';
+import QuickActions from './QuickActions';
 
 function ChatInterface({ userId, userEvents, onEventCommand, onClearChatRef }) {
   const [messages, setMessages] = useState([]);
@@ -164,6 +165,11 @@ function ChatInterface({ userId, userEvents, onEventCommand, onClearChatRef }) {
     }
   };
 
+  const handleQuickAction = (template) => {
+    setInputMessage(template);
+    inputRef.current?.focus();
+  };
+
   useEffect(() => {
     if (!onClearChatRef) return;
 
@@ -245,6 +251,9 @@ function ChatInterface({ userId, userEvents, onEventCommand, onClearChatRef }) {
           ⚠️ {error}
         </div>
       )}
+
+      {/* Quick Actions */}
+      <QuickActions onActionClick={handleQuickAction} />
 
       {/* Input Area */}
       <div className="chat-input-container">

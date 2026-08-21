@@ -2,7 +2,11 @@
 .event-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .form-group {
@@ -114,3 +118,170 @@
 .color-lavender { background-color: var(--color-lavender); }
 .color-grape { background-color: var(--color-grape); }
 .color-graphite { background-color: var(--color-graphite); }
+
+/* Recurrence Selector - Integrated */
+.recurrence-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.recurrence-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.toggle-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.recurrence-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Interval input group */
+.interval-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.interval-number {
+  width: 80px;
+  text-align: center;
+}
+
+.interval-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Days of week selector */
+.days-of-week {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.day-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-button:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.day-button.selected {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+/* End options */
+.end-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.radio-label span {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.end-date-input,
+.occurrence-count-input {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.end-date-input {
+  width: 150px;
+}
+
+.occurrence-count-input {
+  width: 80px;
+  text-align: center;
+}
+
+.end-date-input:disabled,
+.occurrence-count-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .days-of-week {
+    gap: 0.25rem;
+  }
+
+  .day-button {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .radio-label {
+    flex-wrap: wrap;
+  }
+
+  .end-date-input {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+}

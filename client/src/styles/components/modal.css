@@ -27,8 +27,11 @@
 
   transition: all 0.3s ease;
   width: 400px;
+  max-height: 90vh;
   position: relative;
   color: var(--primary);
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-content::before{
@@ -54,6 +57,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
+  flex-shrink: 0;
   /*border-bottom: 2px solid var(--border);*/
 }
 
@@ -76,6 +80,9 @@
 
 .modal-body {
   padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 /* Scrollbar */
@@ -120,6 +127,7 @@
   gap: 0.75rem;
   padding: 1.5rem;
   border-top: 2px solid var(--border);
+  flex-shrink: 0;
 }
 
 .modal-actions .btn {
@@ -157,7 +165,10 @@
   color: white;
 }
 
-/* padding override */
+/* padding override - ensure event form has proper scrolling */
 .modal-content .event-form {
   padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }

@@ -27,6 +27,8 @@
   overflow: hidden;
   position: relative;
   color: var(--primary);
+  display: flex;
+  flex-direction: column;
 }
 
 .event-sidebar::before{
@@ -48,6 +50,15 @@
 }
 .event-sidebar.expanded {
   width: 350px;
+}
+
+/* When in detail mode, make the detail view take full height */
+.event-sidebar.detail-mode {
+  overflow: visible;
+}
+
+.event-sidebar.detail-mode .event-detail-view {
+  height: 100%;
 }
 
 .event-sidebar-header {
@@ -195,4 +206,96 @@
     isolation: isolate;
     width: 100%;
   }
+}
+
+/* ---- Sidebar Header Dropdown ---- */
+.sidebar-header-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.btn-more-options {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: auto;
+}
+
+.btn-more-options:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Sidebar Sort Menu Dropdown */
+.sidebar-sort-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  min-width: 180px;
+  background: rgba(40, 40, 40, 0.95);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.sidebar-sort-menu .sort-menu-header {
+  padding: 10px 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-sort-menu .sort-option {
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.sidebar-sort-menu .sort-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.sidebar-sort-menu .sort-option.active {
+  background: rgba(63, 81, 181, 0.3);
+  color: #fff;
+}
+
+.sidebar-sort-menu .sort-option .material-icons {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-sort-menu .sort-option.active .material-icons {
+  color: #fff;
+}
+
+.sidebar-sort-menu .sort-menu-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
 }

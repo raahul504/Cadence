@@ -29,7 +29,13 @@ function CalendarView({ events, selectedDate, onSelectDate, onChangeViewMode }) 
               }
               return e.date;
             });
-            if (eventDates.includes(formatted)) {
+            const hasEvent = eventDates.includes(formatted);
+            const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+            
+            if (hasEvent && isWeekend) {
+              return 'event-date weekend-event';
+            }
+            if (hasEvent) {
               return 'event-date';
             }
           }

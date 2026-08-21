@@ -44,6 +44,7 @@
 
 .react-calendar__month-view__days__day--neighboringMonth{
   color: var(--text-secondary);
+  opacity: 0.4;
 }
 
 .react-calendar__year-view__months{
@@ -69,9 +70,8 @@
 }
 
 .react-calendar__tile--active.event-date {
-  background: var(--primary) !important; /* dimmed tile */
+  background: var(--primary) !important;
   color: white !important;
-  pointer-events: none;
   overflow: hidden;
 }
 
@@ -149,6 +149,14 @@
   position: relative;
   transition: 0.25s ease;
   width: 70%;
+}
+
+.event-date.weekend-event {
+  color: red !important;
+}
+
+.event-date.weekend-event::after {
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .event-date:hover {

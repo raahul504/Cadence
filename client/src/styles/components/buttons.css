@@ -171,7 +171,7 @@
   background: transparent;
   color: rgb(255, 255, 255);
   border: none;
-  padding: 6px 10px;
+  padding: 1px 10px 1px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -179,7 +179,7 @@
 }
 
 .all-events-btn:hover {
-  background: #cacaca;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .sign-out-btn {

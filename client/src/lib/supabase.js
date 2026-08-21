@@ -106,6 +106,28 @@ export const profileHelpers = {
       .select()
       .single();
     return { data, error };
+  },
+
+  // Update user preference (single preference at a time)
+  updatePreference: async (userId, preferenceName, value) => {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update({ [preferenceName]: value })
+      .eq('id', userId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Update multiple preferences at once
+  updatePreferences: async (userId, preferences) => {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update(preferences)
+      .eq('id', userId)
+      .select()
+      .single();
+    return { data, error };
   }
 };
 
@@ -208,6 +230,105 @@ export const conversationHelpers = {
       .delete()
       .eq('id', conversationId);
     return { error };
+  }
+};
+
+// =====================================================
+// RECURRENCE FUNCTIONS
+// =====================================================
+
+export const recurrenceHelpers = {
+  // Get recurrence pattern for an event
+  getRecurrence: async (eventId) => {
+    const { data, error } = await supabase
+      .from('event_recurrence')
+      .select('*')
+      .eq('event_id', eventId)
+      .single();
+    return { data, error };
+  },
+
+  // Create recurrence pattern
+  createRecurrence: async (eventId, pattern) => {
+    const { data, error } = await supabase
+      .from('event_recurrence')
+      .insert([{ event_id: eventId, ...pattern }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Update recurrence pattern
+  updateRecurrence: async (eventId, pattern) => {
+    const { data, error } = await supabase
+      .from('event_recurrence')
+      .update(pattern)
+      .eq('event_id', eventId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Delete recurrence pattern
+  deleteRecurrence: async (eventId) => {
+    const { error } = await supabase
+      .from('event_recurrence')
+      .delete()
+      .eq('event_id', eventId);
+    return { error };
+  },
+
+  // Get exceptions for an event
+  getExceptions: async (eventId) => {
+    const { data, error } = await supabase
+      .from('event_exceptions')
+      .select('*')
+      .eq('event_id', eventId);
+    return { data, error };
+  },
+
+  // Create exception
+  createException: async (eventId, exceptionData) => {
+    const { data, error } = await supabase
+      .from('event_exceptions')
+      .insert([{ event_id: eventId, ...exceptionData }])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Update exception
+  updateException: async (exceptionId, updates) => {
+    const { data, error } = await supabase
+      .from('event_exceptions')
+      .update(updates)
+      .eq('id', exceptionId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Delete exception
+  deleteException: async (exceptionId) => {
+    const { error } = await supabase
+      .from('event_exceptions')
+      .delete()
+      .eq('id', exceptionId);
+    return { error };
+  },
+
+  // Get all recurring events with their patterns
+  getRecurringEvents: async (userId) => {
+    const { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        event_recurrence (*),
+        event_exceptions (*)
+      `)
+      .eq('user_id', userId)
+      .eq('is_recurring', true);
+    return { data, error };
   }
 };
 

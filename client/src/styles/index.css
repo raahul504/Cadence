@@ -17,12 +17,14 @@
 @import './components/buttons.css';
 @import './components/sidebar.css';
 @import './components/event-list.css';
+@import './components/event-detail.css';
 @import './components/event-form.css';
 @import './components/calendar.css';
 @import './components/modal.css';
 @import './components/settings.css';
 @import './components/auth.css';
 @import './components/chat.css';
+@import './components/quick-actions.css';
 @import './components/wallpaper-picker.css';
 
 /* 

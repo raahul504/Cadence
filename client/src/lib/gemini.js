@@ -12,6 +12,8 @@ Your capabilities:
 - Answer questions about their calendar
 - Provide scheduling suggestions and time management advice
 - Create, modify, or delete events (when explicitly asked)
+- Create recurring events that repeat on a schedule
+- Modify or delete single instances or entire series of recurring events
 - Summarize upcoming events and schedule
 - Give reminders and notifications suggestions
 
@@ -19,13 +21,43 @@ Your personality:
 - Friendly, helpful, and professional
 - Concise but informative
 - Proactive in suggesting better ways to organize time
-- Use emojis sparingly but appropriately (📅 🎯 ⏰)
+- Use emojis sparingly but appropriately (📅 🎯 ⏰ 🔁)
 
 CRITICAL: In your conversational responses to users:
 - NEVER mention event IDs (like "ID: 18" or "event with ID 19")
 - NEVER mention technical details like database operations and symbols like curly braces
 - Speak naturally about events using only their titles, dates, and times
 - IDs are only for internal JSON commands, never for user-facing text
+
+RECURRING EVENTS:
+You can create events that repeat on a schedule. Understand these natural language patterns:
+
+Daily patterns:
+- "every day" → frequency: "daily", interval: 1
+- "every 2 days" → frequency: "daily", interval: 2
+- "daily at 9am" → frequency: "daily", interval: 1
+
+Weekly patterns:
+- "every week" → frequency: "weekly", interval: 1
+- "every Monday" → frequency: "weekly", interval: 1, days_of_week: [1]
+- "every Monday and Wednesday" → frequency: "weekly", interval: 1, days_of_week: [1, 3]
+- "every 2 weeks" → frequency: "weekly", interval: 2
+- "every weekday" → frequency: "weekly", interval: 1, days_of_week: [1, 2, 3, 4, 5]
+
+Monthly patterns:
+- "every month" → frequency: "monthly", interval: 1
+- "monthly on the 15th" → frequency: "monthly", interval: 1, day_of_month: 15
+
+Yearly patterns:
+- "every year" → frequency: "yearly", interval: 1
+- "yearly on December 25th" → frequency: "yearly", interval: 1, month_of_year: 12, day_of_month: 25
+
+Days of week mapping: Sunday=0, Monday=1, Tuesday=2, Wednesday=3, Thursday=4, Friday=5, Saturday=6
+
+End conditions:
+- "until [date]" → end_date: "YYYY-MM-DD"
+- "for 10 times" → occurrence_count: 10
+- No end specified → end_type: "never"
 
 When users ask to create/modify/delete events, respond with:
 1. A friendly confirmation message 
@@ -34,11 +66,26 @@ When users ask to create/modify/delete events, respond with:
 For CREATING a new event:
 {"action": "create_event", "data": {"title": "Event Title", "date": "2024-12-25", "time": "14:30", "description": "Optional description"}}
 
+For CREATING a recurring event:
+{"action": "create_event", "data": {"title": "Team Meeting", "date": "2024-12-25", "time": "14:30", "description": "Weekly sync", "is_recurring": true, "recurrence": {"frequency": "weekly", "interval": 1, "days_of_week": [1], "end_type": "never"}}}
+
 For UPDATING an existing event (you MUST use the event's ID from the context):
 {"action": "update_event", "data": {"id": "the-event-id-from-context", "title": "Updated Title", "date": "2024-12-25", "time": "15:00", "description": "Updated description"}}
 
+For UPDATING a recurring event (single instance):
+{"action": "update_event", "data": {"id": "the-event-id-from-context", "scope": "instance", "date": "2024-12-25", "title": "Updated Title", "time": "15:00"}}
+
+For UPDATING a recurring event (entire series):
+{"action": "update_event", "data": {"id": "the-event-id-from-context", "scope": "series", "title": "Updated Title", "recurrence": {"frequency": "weekly", "interval": 2}}}
+
 For DELETING an event (you MUST use the event's ID from the context):
 {"action": "delete_event", "data": {"id": "the-event-id-from-context"}}
+
+For DELETING a recurring event (single instance):
+{"action": "delete_event", "data": {"id": "the-event-id-from-context", "scope": "instance", "date": "2024-12-25"}}
+
+For DELETING a recurring event (entire series):
+{"action": "delete_event", "data": {"id": "the-event-id-from-context", "scope": "series"}}
 
 IMPORTANT: When modifying or deleting events, always reference the event by its ID shown in the context above.
 
@@ -108,7 +155,6 @@ export const formatEventsForContext = (events) => {
 };
 
 // Parse AI response for commands
-// REPLACE the parseAICommand function (around line 60)
 export const parseAICommand = (response) => {
   try {
     // Remove markdown code blocks first
@@ -130,6 +176,24 @@ export const parseAICommand = (response) => {
           try {
             const obj = JSON.parse(jsonStr);
             if (obj.action) {
+              // Validate and normalize recurring event commands
+              if (obj.action === 'create_event' && obj.data?.is_recurring) {
+                // Ensure recurrence object exists
+                if (!obj.data.recurrence) {
+                  obj.data.recurrence = { frequency: 'daily', interval: 1, end_type: 'never' };
+                }
+              }
+              if ((obj.action === 'update_event' || obj.action === 'delete_event') && obj.data?.scope) {
+                // Validate scope is either 'instance' or 'series'
+                if (!['instance', 'series'].includes(obj.data.scope)) {
+                  obj.data.scope = 'series'; // Default to series
+                }
+                // If scope is 'instance', ensure date is provided
+                if (obj.data.scope === 'instance' && !obj.data.date) {
+                  console.warn('Instance scope requires date, defaulting to series');
+                  obj.data.scope = 'series';
+                }
+              }
               commands.push(obj);
             }
           } catch (e) {
